@@ -1,0 +1,73 @@
+<div class="chat-container">
+  <header class="chat-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">H</div>
+      <div class="brand-copy">
+        <span class="eyebrow">ESPACE ÉTUDIANT</span>
+        <h1>Assistant Scolarité</h1>
+        <p>École d'Ingénieurs Hélianthe</p>
+      </div>
+    </div>
+    <div class="status"><span class="status-dot" aria-hidden="true"></span>Assistant disponible</div>
+  </header>
+
+  <main class="messages-container" aria-live="polite">
+    <div class="welcome-message" *ngIf="messages.length === 0">
+      <span class="eyebrow">VOTRE ACCOMPAGNEMENT ACADÉMIQUE</span>
+      <h2>Bonjour, bienvenue !</h2>
+      <p>
+        Je suis votre assistant de scolarité. Posez-moi vos questions concernant
+        les études, les stages, le PFE ou la vie étudiante.
+      </p>
+    </div>
+
+    <div
+      *ngFor="let message of messages"
+      class="message"
+      [ngClass]="message.role">
+      <div class="message-body">
+        <span class="message-author">{{ message.role === 'user' ? 'Vous' : 'Assistant Scolarité' }}</span>
+        <div class="message-content" [innerHTML]="formatMessage(message.content)"></div>
+        <div class="sources" *ngIf="message.sources?.length">
+          <h4>Sources utilisées</h4>
+          <div class="source-item" *ngFor="let source of message.sources">
+            <strong>{{ source.citation }}</strong>
+            {{ source.document }}
+            — Page {{ source.page }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="loading">
+      L'assistant prépare sa réponse...
+    </div>
+
+    <div class="error" *ngIf="error">
+      <span aria-hidden="true">!</span>
+      {{ error }}
+    </div>
+  </main>
+
+  <footer class="chat-footer">
+    <form (ngSubmit)="sendMessage()">
+      <input
+        type="text"
+        name="question"
+        [(ngModel)]="question"
+        placeholder="Écrivez votre question ici..."
+        aria-label="Votre question à l'assistant"
+        [disabled]="loading"
+      />
+      <button
+        type="submit"
+        [disabled]="!question.trim() || loading">
+        <span>Envoyer</span>
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M3.5 10h13m-5-5 5 5-5 5" />
+        </svg>
+      </button>
+    </form>
+    <p><span aria-hidden="true">◆</span> Les réponses sont basées sur les documents officiels de l'École.</p>
+  </footer>
+</div>
