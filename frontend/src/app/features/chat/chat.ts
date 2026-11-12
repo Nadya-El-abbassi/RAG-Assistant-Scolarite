@@ -27,6 +27,11 @@ export class Chat {
   messages: ChatMessage[] = [];
   loading: boolean = false;
   error: string = '';
+  quickQuestions = [
+    'Quelles sont les dates limites pour le dépôt du PFE ?',
+    'Où trouver les conventions de stage ?',
+    'Comment valider mon semestre ?'
+  ];
 
   formatMessage(content: string): SafeHtml {
     const html = marked.parse(content, { async: false });
@@ -39,8 +44,12 @@ export class Chat {
   private sanitizer: DomSanitizer
 ) {}
 
+askSuggestedQuestion(question: string): void {
+  this.question = question;
+  this.sendMessage();
+}
 
-  sendMessage(): void {
+sendMessage(): void {
 
     const question = this.question.trim();
 
